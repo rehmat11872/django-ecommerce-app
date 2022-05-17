@@ -4,6 +4,8 @@ import email
 from xml.etree.ElementInclude import default_loader
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+
+from carts.models import *
 from .models import *
 from accounts.models import Account
 from .forms import RegistrationForm
@@ -19,6 +21,8 @@ from django.contrib.auth.tokens import default_token_generator
 # from .tokens import account_activation_token  
 from django.contrib.auth.models import User  
 from django.core.mail import EmailMessage   
+from carts.views import _cart_id
+from carts.models import *
 # Create your views here.
 def register(request):
     if request.method == "POST":
@@ -65,6 +69,17 @@ def login(request):
         user = auth.authenticate(request, email=email, password=password)
         print(user, 'login:::::::')
         if user is not None:
+            try:
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+                is_cart_item_exist = CartItem.objects.filter(cart=cart).exists()
+                if is_cart_item_exist:
+                    cart_item = CartItem.objects.filter(cart=cart)
+
+                    for item in cart_item:
+                        item.user = user
+                        item.save()
+            except:
+                pass    
             auth.login(request, user) 
             messages.success(request, 'Login Successfully')
             return redirect('dashboard')

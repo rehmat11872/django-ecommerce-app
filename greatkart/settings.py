@@ -151,6 +151,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 
 # Optional SMTP authentication information for EMAIL_HOST.
-EMAIL_HOST_USER = 'raorehmat11@gmail.com'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'shantest814@gmail.com'
+EMAIL_HOST_PASSWORD = 'shanshan87'
 EMAIL_USE_TLS = True
