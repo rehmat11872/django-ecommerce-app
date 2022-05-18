@@ -74,10 +74,43 @@ def login(request):
                 is_cart_item_exist = CartItem.objects.filter(cart=cart).exists()
                 if is_cart_item_exist:
                     cart_item = CartItem.objects.filter(cart=cart)
-
+                    
+                    #Getting the product variation by card id
+                    product_variation = []
                     for item in cart_item:
-                        item.user = user
-                        item.save()
+                        variation = item.variations.all()
+                        product_variation.append(list(variation))
+
+                    #Get the card items from the user to access his  product variation 
+                    cart_item = CartItem.objects.filter(user=user)
+                    #existing_variations -> database
+                    #current variation-> product_variation
+                    #item_id -> database
+                    ex_var_list = []
+                    id = []
+                    for item in cart_item:
+                        existing_variations = item.variations.all()
+                        ex_var_list.append(list(existing_variations))
+                        id.append(item.id)  
+
+
+                    for pr in product_variation:
+                        if pr in ex_var_list:
+                            index = ex_var_list.index(pr)
+                            item_id = id[index]
+                            item = CartItem.objects.get(id=item_id)
+                            item.quantity += 1
+                            item.user = user
+                            item.save()
+                        else:
+                            cart_item = CartItem.objects.filter(cart=cart)
+                            for item in cart_item:
+                                item.user = user
+                                item.save()    
+
+                    # for item in cart_item:
+                    #     item.user = user
+                    #     item.save()
             except:
                 pass    
             auth.login(request, user) 
