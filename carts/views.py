@@ -144,10 +144,13 @@ def add_cart(request, product_id):
         return redirect('cart')     
 
 def remove_cart(request, product_id, cart_item_id):
-    cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
     try:    
-        cart_items = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.get(product=product, user=request.user, id=cart_item_id)
+        else:
+            cart = Cart.objects.get(cart_id=_cart_id(request))
+            cart_items = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
         if cart_items.quantity > 1:
             cart_items.quantity -= 1
             cart_items.save()
@@ -159,9 +162,12 @@ def remove_cart(request, product_id, cart_item_id):
 
 
 def remove_cart_item(request, product_id, cart_item_id):
-    cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
-    cart_items = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
+    if request.user.is_authenticated:
+        cart_items = CartItem.objects.get(product=product, user=request.user, id=cart_item_id)
+    else:
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart_items = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
     cart_items.delete()
     return redirect('cart')  
 
