@@ -23,8 +23,8 @@ class Order(models.Model):
     ('Canceled', 'Canceled'),
     )
 
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, blank=True, null=True)
     order_number = models.CharField(max_length=20)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -33,14 +33,14 @@ class Order(models.Model):
     address_line_1 = models.CharField(max_length=50)
     address_line_2 = models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length=50)
-    State = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     order_note = models.CharField(max_length=100, blank=True)
     order_total = models.FloatField()
     tax = models.FloatField()
     status = models.CharField(max_length=10, choices=STATUS, default='New')
     ip = models.CharField(blank=True, max_length=20)
-    is_ordered = models.BooleanField()
+    is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
