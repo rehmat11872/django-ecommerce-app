@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from carts.models import *
 from .forms import *
@@ -72,6 +72,11 @@ def payments(request):
     email.send()
 
     #send order number and trasnsaction id back to the senddata method via jsonresponse
+    data = {
+        'order_number': order.order_number,
+        'transID': payment.payment_id,
+    }
+    return JsonResponse(data)
 
     return render(request, 'orders/payments.html')
 
@@ -137,7 +142,8 @@ def place_order(request, total=0, quantity=0,):
     else:
         return redirect('checkout')        
 
-
+def order_complete(request):
+    return render(request, 'orders/order_complete.html')
 
 
 
