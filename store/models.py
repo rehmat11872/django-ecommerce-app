@@ -1,8 +1,10 @@
+from itertools import product
 from unicodedata import category
 from django.db import models
 from accounts.models import *
 from category.models import *
 from django.urls import reverse
+from django.db.models import Avg
 
 # Create your models here.
 class Product(models.Model):
@@ -23,6 +25,13 @@ class Product(models.Model):
 
     def get_url(self):
         return reverse('product_detail', args=[self.category.slug, self.slug])
+
+    def averageReview(self):
+        reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(average=Avg('rating'))  
+        avg = 0
+        if reviews['average'] is not None:
+            avg = float(reviews['average'])
+        return avg      
 
 
 
