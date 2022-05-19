@@ -7,6 +7,9 @@ import datetime
 import json
 from .models import *
 from store.models import *
+from django.core.mail import EmailMessage   
+from django.template.loader import render_to_string  
+
 # Create your views here.
 
 def payments(request):
@@ -58,6 +61,15 @@ def payments(request):
 
 
     #send order recieved email to customer
+    mail_subject = 'Thankyou for your order'
+    message = render_to_string('orders/order_recieved_email.html', {
+        'user': request.user,
+        'order': order,
+        }
+    )
+    to_email = request.user.email
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    email.send()
 
     #send order number and trasnsaction id back to the senddata method via jsonresponse
 
