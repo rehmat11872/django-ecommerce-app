@@ -1,3 +1,15 @@
+
+{% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                {{ error }}
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+
 {% if messages %}
     {% for message in messages %}
     <div id="message" class="container">

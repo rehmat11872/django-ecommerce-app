@@ -27,6 +27,9 @@ from carts.views import _cart_id
 from carts.models import *
 import requests 
 # Create your views here.
+
+
+
 def register(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
@@ -40,6 +43,7 @@ def register(request):
             user = Account.objects.create_user(first_name=first_name, last_name=last_name, email=email, password=password, username=username)
             user.phone_number = phone_number
             user.save()
+            UserProfile.objects.create(user=user)
 
             # User Activation
             current_site = get_current_site(request)
@@ -55,7 +59,8 @@ def register(request):
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
             # messages.success(request, 'Thank you for Registration. We have sent verifiaction email to your email address. Please verify it.')
-            return redirect('/accounts/login/?command=verification&email='+email)
+            # return redirect('/accounts/login/?command=verification&email='+email)
+            return redirect('/accounts/login/?command=verification&email=' + to_email)
     else:
         form = RegistrationForm()
     context = {
