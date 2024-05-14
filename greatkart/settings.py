@@ -13,6 +13,7 @@ from ctypes import cast
 from pathlib import Path
 from decouple import config
 from re import template
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -27,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool) #true
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['greatkartt.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'greatkart.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
